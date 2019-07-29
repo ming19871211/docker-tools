@@ -1,0 +1,28 @@
+version: '3.1'
+services:
+  zookeeper:
+    image: zookeeper:3.5
+    restart: always
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      TZ: Asia/Shanghai 
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /data/zookeeper/db:/data
+      - /data/zookeeper/dblog:/datalog
+      - /data/zookeeper/logs:/logs
+  kafka:
+    build: ./
+    restart: always
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      TZ: Asia/Shanghai 
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.14.253
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /data/kafka/kafka-logs:/kafka/kafka-logs
