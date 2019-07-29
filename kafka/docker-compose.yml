@@ -14,14 +14,15 @@ services:
       - /data/zookeeper/dblog:/datalog
       - /data/zookeeper/logs:/logs
   kafka:
-    build: ./
+    #build: ./
+    image: ming19871211/kafka
     restart: always
     container_name: kafka
     ports:
       - "9092:9092"
     environment:
       TZ: Asia/Shanghai 
-      KAFKA_ADVERTISED_HOST_NAME: 192.168.14.253
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.0.145
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /etc/localtime:/etc/localtime:ro

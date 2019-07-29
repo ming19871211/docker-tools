@@ -10,7 +10,7 @@ if [[ ! -f "$KAFKA_CONF_DIR/server.properties" ]]; then
     echo "############################# Socket Server Settings #############################" >> "$CONFIG"
     echo "advertised.listeners=PLAINTEXT://$KAFKA_ADVERTISED_HOST_NAME:9092" >> "$CONFIG"
     echo "num.network.threads=$KAFKA_NUM_NETWORK_THREADS" >> "$CONFIG"
-    echo "num.io.threads=$KAFKA_NUM_IO_THREADS" >> "$CONFIG"
+    echo "num.io.threads=$KAFKA_NUM_IO_THREAD" >> "$CONFIG"
     echo "socket.send.buffer.bytes=$KAFKA_SOCKET_SEND_BUFFER_BYTES" >> "$CONFIG"
     echo "socket.receive.buffer.bytes=$KAFKA_SOCKET_RECEIVE_BUFFER_BYTES" >> "$CONFIG"
     echo "socket.request.max.bytes=$KAFKA_SOCKET_RECEIVE_BUFFER_BYTES" >> "$CONFIG"
@@ -22,9 +22,9 @@ if [[ ! -f "$KAFKA_CONF_DIR/server.properties" ]]; then
     echo "offsets.topic.replication.factor=$KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR" >> "$CONFIG"
     echo "transaction.state.log.replication.factor=$KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR" >> "$CONFIG"
     echo "transaction.state.log.min.isr=$KAFKA_TRANSACTION_STATE_LOG_MIN_ISR" >> "$CONFIG"
-    if [[  -n $KAFKA_LOG_FLUSH_INTERVAL_MESSAGES or  -n $LOG_FLUSH_INTERVAL_MS ]]
-    echo "############################# Log Flush Policy #############################" >> "$CONFIG"
-    fi
+    if [[  -n $KAFKA_LOG_FLUSH_INTERVAL_MESSAGES ||  -n $LOG_FLUSH_INTERVAL_MS ]]; then
+      echo "############################# Log Flush Policy #############################" >> "$CONFIG"
+    fi 
     if [[ -n $KAFKA_LOG_FLUSH_INTERVAL_MESSAGES ]]; then
       echo "log.flush.interval.messages=$KAFKA_LOG_FLUSH_INTERVAL_MESSAGES" >> "$CONFIG"
     fi

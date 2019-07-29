@@ -2,7 +2,7 @@ FROM openjdk:8-jre-slim
 MAINTAINER QiMing Mei <meiqiming@talkweb.com.cn>
 
 ENV KAFKA_VERSION=2.2.0 \
-    SCALA_VERSION=kafka_2.12 \
+    SCALA_VERSION=2.12 \
     KAFKA_HOME=/kafka \
     KAFKA_CONF_DIR=/kafka/config \
     KAFKA_BROKER_ID=0 \
@@ -28,17 +28,23 @@ ENV KAFKA_VERSION=2.2.0 \
 RUN set -eux; \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y --no-install-recommends wget; \
+    apt-get install -y --no-install-recommends ca-certificates dirmngr gosu gnupg netcat  wget; \
     rm -rf /var/lib/apt/lists/*; \
     wget -q "http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/$KAFKA_VERSION/kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz"; \
     tar -zxf "kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz"; \
     rm kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz; \
     mv kafka_$SCALA_VERSION-$KAFKA_VERSION $KAFKA_HOME; \
     rm $KAFKA_CONF_DIR/server.properties; \
-    mkdir -p $KAFKA_LOG_DIRS;
+    mkdir /kafka/kafka-logs; 
 
 WORKDIR ${KAFKA_HOME}
 EXPOSE 9092
 COPY docker-entrypoint.sh /
+RUN set -eux; \
+    groupadd -r kafka --gid=1000; \
+    useradd -r -g kafka --uid=1000 kafka; \
+    chown -R kafka:kafka  "$KAFKA_HOME"; \
+    chmod 777 /docker-entrypoint.sh;
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["bin/kafka-server-start.sh","config/server.properties"]

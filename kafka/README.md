@@ -22,7 +22,7 @@ if [[ ! -f "$KAFKA_CONF_DIR/server.properties" ]]; then
     echo "############################# Socket Server Settings #############################" >> "$CONFIG"
     echo "advertised.listeners=PLAINTEXT://$KAFKA_ADVERTISED_HOST_NAME:9092" >> "$CONFIG"
     echo "num.network.threads=$KAFKA_NUM_NETWORK_THREADS" >> "$CONFIG"
-    echo "num.io.threads=$KAFKA_NUM_IO_THREADS" >> "$CONFIG"
+    echo "num.io.threads=$KAFKA_NUM_IO_THREAD" >> "$CONFIG"
     echo "socket.send.buffer.bytes=$KAFKA_SOCKET_SEND_BUFFER_BYTES" >> "$CONFIG"
     echo "socket.receive.buffer.bytes=$KAFKA_SOCKET_RECEIVE_BUFFER_BYTES" >> "$CONFIG"
     echo "socket.request.max.bytes=$KAFKA_SOCKET_RECEIVE_BUFFER_BYTES" >> "$CONFIG"
@@ -34,9 +34,9 @@ if [[ ! -f "$KAFKA_CONF_DIR/server.properties" ]]; then
     echo "offsets.topic.replication.factor=$KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR" >> "$CONFIG"
     echo "transaction.state.log.replication.factor=$KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR" >> "$CONFIG"
     echo "transaction.state.log.min.isr=$KAFKA_TRANSACTION_STATE_LOG_MIN_ISR" >> "$CONFIG"
-    if [[  -n $KAFKA_LOG_FLUSH_INTERVAL_MESSAGES or  -n $LOG_FLUSH_INTERVAL_MS ]]
-    echo "############################# Log Flush Policy #############################" >> "$CONFIG"
-    fi
+    if [[  -n $KAFKA_LOG_FLUSH_INTERVAL_MESSAGES ||  -n $LOG_FLUSH_INTERVAL_MS ]]; then
+      echo "############################# Log Flush Policy #############################" >> "$CONFIG"
+    fi 
     if [[ -n $KAFKA_LOG_FLUSH_INTERVAL_MESSAGES ]]; then
       echo "log.flush.interval.messages=$KAFKA_LOG_FLUSH_INTERVAL_MESSAGES" >> "$CONFIG"
     fi
@@ -68,7 +68,7 @@ FROM openjdk:8-jre-slim
 MAINTAINER QiMing Mei <meiqiming@talkweb.com.cn>
 
 ENV KAFKA_VERSION=2.2.0 \
-    SCALA_VERSION=kafka_2.12 \
+    SCALA_VERSION=2.12 \
     KAFKA_HOME=/kafka \
     KAFKA_CONF_DIR=/kafka/config \
     KAFKA_BROKER_ID=0 \
@@ -94,18 +94,24 @@ ENV KAFKA_VERSION=2.2.0 \
 RUN set -eux; \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y --no-install-recommends wget; \
+    apt-get install -y --no-install-recommends ca-certificates dirmngr gosu gnupg netcat  wget; \
     rm -rf /var/lib/apt/lists/*; \
     wget -q "http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/$KAFKA_VERSION/kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz"; \
     tar -zxf "kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz"; \
     rm kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz; \
     mv kafka_$SCALA_VERSION-$KAFKA_VERSION $KAFKA_HOME; \
     rm $KAFKA_CONF_DIR/server.properties; \
-    mkdir /kafka/kafka-logs;
+    mkdir /kafka/kafka-logs; 
 
 WORKDIR ${KAFKA_HOME}
 EXPOSE 9092
 COPY docker-entrypoint.sh /
+RUN set -eux; \
+    groupadd -r kafka --gid=1000; \
+    useradd -r -g kafka --uid=1000 kafka; \
+    chown -R kafka:kafka  "$KAFKA_HOME"; \
+    chmod 777 /docker-entrypoint.sh;
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["bin/kafka-server-start.sh","config/server.properties"]
 
@@ -128,14 +134,15 @@ services:
       - /data/zookeeper/dblog:/datalog
       - /data/zookeeper/logs:/logs
   kafka:
-    build: ./
+    #build: ./
+    image: ming19871211/kafka
     restart: always
     container_name: kafka
     ports:
       - "9092:9092"
     environment:
       TZ: Asia/Shanghai 
-      KAFKA_ADVERTISED_HOST_NAME: 192.168.14.253
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.0.145
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -150,4 +157,20 @@ docker-compose -f docker-compose.yml up -d
 #删部署
 ``` bash
 docker-compose -f docker-compose.yml down --volumes
+```
+#打包
+```
+docker build -t ming19871211/kafka .
+```
+
+#测试
+```
+#创建一个主题
+bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic mqmtest
+#查看主体详情
+bin/kafka-topics.sh --describe --zookeeper zookeeper:2181 --topic mqmtest
+#生产者产生消息
+bin/kafka-console-producer.sh --broker-list 172.19.153.9:9092 --topic mqmtest
+#消费者消费消息
+bin/kafka-console-consumer.sh --bootstrap-server 172.19.153.9:9092 --topic mqmtest --from-beginning
 ```
