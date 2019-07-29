@@ -65,6 +65,7 @@ EOF
 #生成Dockerfile
 cat <<\EOF  >Dockerfile
 FROM openjdk:8-jre-slim
+# FROM arm64v8/openjdk:8-jre-slim
 MAINTAINER QiMing Mei <meiqiming@talkweb.com.cn>
 
 ENV KAFKA_VERSION=2.2.0 \
@@ -116,12 +117,17 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["bin/kafka-server-start.sh","config/server.properties"]
 
 EOF
+
+#打包
+docker build -t ming19871211/kafka .
+
 #生成docker-compose.yml
 cat <<EOF  >docker-compose.yml
 version: '3.1'
 services:
   zookeeper:
     image: zookeeper:3.5
+    #image: arm64v8/zookeeper:3.5
     restart: always
     container_name: zookeeper
     ports:
@@ -157,10 +163,6 @@ docker-compose -f docker-compose.yml up -d
 #删部署
 ``` bash
 docker-compose -f docker-compose.yml down --volumes
-```
-#打包
-```
-docker build -t ming19871211/kafka .
 ```
 
 #测试
