@@ -35,7 +35,7 @@ RUN set -eux; \
     rm kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz; \
     mv kafka_$SCALA_VERSION-$KAFKA_VERSION $KAFKA_HOME; \
     rm $KAFKA_CONF_DIR/server.properties; \
-    mkdir /kafka/kafka-logs;
+    mkdir -p $KAFKA_LOG_DIRS;
 
 WORKDIR ${KAFKA_HOME}
 EXPOSE 9092
