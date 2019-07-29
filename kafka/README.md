@@ -94,7 +94,7 @@ ENV KAFKA_VERSION=2.2.0 \
 RUN set -eux; \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y --no-install-recommends ca-certificates dirmngr gosu gnupg netcat  wget; \
+    apt-get install -y --no-install-recommends ca-certificates  wget; \
     rm -rf /var/lib/apt/lists/*; \
     wget -q "http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/$KAFKA_VERSION/kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz"; \
     tar -zxf "kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz"; \
