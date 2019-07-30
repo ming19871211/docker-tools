@@ -1,0 +1,27 @@
+version: '3.0'
+services:
+  fastdfs:
+    build: .
+    #image: qbanxiaoli/fastdfs
+    restart: always
+    container_name: fastdfs
+    ports:
+      - "9999:9999"
+      - "22122:22122"
+      - "23000:23000"
+    environment:
+      # nginx服务端口,默认8080端口，可修改
+      - WEB_PORT=9999
+      # tracker_server服务端口，默认22122端口，可修改
+      - FDFS_PORT=22122
+      # fastdht服务端口，默认11411端口，可修改
+      - FDHT_PORT=11411
+      # docker所在主机的IP地址，默认使用eth0网卡的地址
+      - IP=192.168.0.145
+    volumes:
+      # 将本地目录映射到docker容器内的fastdfs数据存储目录，将fastdfs文件存储到主机上，以免每次重建docker容器，之前存储的文件就丢失了。
+      - /data/fastdfs:/var/local
+    # 使docker具有root权限以读写主机上的目录
+    privileged: true
+    # 网络模式为host，可不暴露端口，即直接使用主机的网络接口
+    network_mode: "host"
