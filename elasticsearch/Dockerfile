@@ -1,6 +1,17 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch-alpine-base:latest
-MAINTAINER Elastic Docker Team <docker@elastic.co>
+FROM alpine:latest
+MAINTAINER QiMing Mei <meiqiming@talkweb.com.cn>
+# Update image and install base packages
+RUN apk update && \
+    apk upgrade && \
+    apk add bash curl openjdk8 openssl && \
+    rm -rf /var/cache/apk/*
 
+# Install elasticsearch user
+RUN adduser -D -u 1000 -h /usr/share/elasticsearch elasticsearch
+
+# docker build -t ming19871211/elasticsearch:2.4.5 --build-arg ELASTIC_VERSION=2.4.5 \
+# --build-arg ES_DOWNLOAD_URL=https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.5  \
+# --build-arg ES_JAVA_OPTS="-Xms2g -Xmx2g" .
 ARG ELASTIC_VERSION
 ARG ES_DOWNLOAD_URL
 ARG ES_JAVA_OPTS
@@ -32,7 +43,7 @@ RUN eval ${ES_JAVA_OPTS:-} elasticsearch-plugin install --batch x-pack
 
 COPY elasticsearch.yml config/
 COPY log4j2.properties config/
-COPY bin/es-docker bin/es-docker
+COPY es-docker bin/es-docker
 
 USER root
 RUN chown elasticsearch:elasticsearch config/elasticsearch.yml config/log4j2.properties bin/es-docker && \
