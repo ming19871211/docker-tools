@@ -4,3 +4,6 @@ docker build -t ming19871211/node:8-cnpm .
 #docker run -d --name node-cnpm ming19871211/node:8-cnpm tail -f /dev/null
 #上传镜像
 docker push ming19871211/node:8-cnpm
+#########arm64######## 
+# docker build -t ming19871211/node:8-cnpm-arm64 .
+# docker push ming19871211/node:8-cnpm-arm64
