@@ -2,7 +2,7 @@ FROM openjdk:8-jre-slim
 #FROM arm64v8/openjdk:8-jre-slim
 MAINTAINER QiMing Mei <meiqiming@talkweb.com.cn>
 
-ENV KAFKA_VERSION=2.2.0 \
+ENV KAFKA_VERSION=2.3.0 \
     SCALA_VERSION=2.12 \
     KAFKA_HOME=/kafka \
     KAFKA_CONF_DIR=/kafka/config \
