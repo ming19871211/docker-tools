@@ -11,5 +11,5 @@ WORKDIR /tmp-install/ffmpeg
 RUN cd /tmp-install/lame-3.99.5/  &&  ./configure --enable-shared --build=arm-linux  && make && make install \
     && cd /tmp-install/xvidcore-1.1.0/build/generic  && ./configure --build=arm-linux && make  && make install \
     && cd /tmp-install/opencore-amr-0.1.3   && ./configure --build=arm-linux && make && make install   \
-    && cd /tmp-install/ffmpeg/  &&   ./configure --enable-libopencore-amrnb --enable-shared --enable-libmp3lame --enable-libopencore-amrwb --enable-gpl --enable-version3 --build=arm-linux && make && make install \
+    && cd /tmp-install/ffmpeg/  &&   ./configure --enable-libopencore-amrnb --enable-shared --enable-libmp3lame --enable-libopencore-amrwb --enable-gpl --enable-version3 && make && make install \
     && cp -r /usr/local/lib/* /usr/lib/    && rm -rf /tmp-install/*  && mkdir /tmp-install/ffmpeg  
