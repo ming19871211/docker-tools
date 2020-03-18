@@ -19,4 +19,4 @@ RUN set -eux; \
 
 FROM busybox:latest
 MAINTAINER QiMing Mei <meiqiming@talkweb.com.cn>
-COPY --from=build /skywalking/agent /skywalking/
+COPY --from=build /skywalking/agent /skywalking/agent
