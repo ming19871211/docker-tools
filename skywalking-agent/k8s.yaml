@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: $DEPLOYMENT_NAME
+  name: $DEPLOYMENT_NAME
+  namespace: hmall
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: $DEPLOYMENT_NAME
+  template:
+    metadata:
+      labels:
+        app: $DEPLOYMENT_NAME
+    spec:
+      initContainers:
+      - name: init-agent-sidecar
+        image: ming19871211/skywalking-agent:latest
+        command:
+        - 'sh'
+        - '-c'
+        - 'set -ex;cp -r /skywalking/agent/* /usr/skywalking/agent;'
+        volumeMounts:
+        - name: agent
+          mountPath: /usr/skywalking/agent
+      containers:
+      - env:
+        - name: SKYWALKING_ADDR
+          value: $SKYWALKING_ADDR
+            ***部分省略***
+        volumeMounts:
+        - name: agent
+          mountPath: /usr/skywalking/agent 
+      volumes:
+      - name: agent
+        emptyDir: {}
