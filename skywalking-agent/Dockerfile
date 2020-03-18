@@ -15,7 +15,7 @@ WORKDIR $SKYWALKING_HOME
 RUN set -eux; \
     wget -O skywalking.tar.gz "$SKYWALKING_TGZ_URL"; \
     tar -xvf skywalking.tar.gz --strip-components=1; \
-    rm skywalking.tar.gz*; \
+    rm skywalking.tar.gz*;
 
 FROM busybox:latest
 MAINTAINER QiMing Mei <meiqiming@talkweb.com.cn>
