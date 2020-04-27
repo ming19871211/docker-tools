@@ -31,4 +31,4 @@ RUN R -e "source(file='${R_SOURCE_PATH}/package_install.R')" \
     && R -e "library('RMySQL')" \
     && R -e "library('tmcn')" 
 
-ENTRYPOINT ["bash","-C","R CMD Rserve --RS-enable-remote --RS-port ${CONTAINER_PORT} && tail -f /dev/null"]
+ENTRYPOINT ["bash","-c","R CMD Rserve --RS-enable-remote --RS-port ${CONTAINER_PORT} && tail -f /dev/null"]
