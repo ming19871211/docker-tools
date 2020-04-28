@@ -12,7 +12,7 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak \
     && apt-get -y install wget tar gcc g++ libmysql++-dev \
     && rm -rf /var/lib/apt/lists/*
 
-ENV R_SOURCE_PATH=/R/rscript/
+ENV R_SOURCE_PATH=/R/rscript/ CONTAINER_PORT=6311
 COPY ./rscript/  ${R_SOURCE_PATH}
 
 RUN R -e "source(file='${R_SOURCE_PATH}/package_install.R')" \
