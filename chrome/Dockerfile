@@ -9,7 +9,8 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
   && rm /etc/apt/sources.list.d/google-chrome.list \
   && rm -rf /var/lib/apt/lists/* /var/cache/apt/* \
   && wget https://chromedriver.storage.googleapis.com/81.0.4044.138/chromedriver_linux64.zip \
-  && unzip chromedriver_linux64.zip  -d /usr/bin/ && chmod +x /usr/bin/chromedriver
+  && unzip chromedriver_linux64.zip  -d /usr/bin/ && chmod +x /usr/bin/chromedriver \
+  && rm -rf chromedriver_linux64.zip
 
 
 
