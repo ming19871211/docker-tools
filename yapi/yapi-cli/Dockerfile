@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:12
 MAINTAINER Meiqiming  <ming19871211@163.com>
 
 ENV TZ="Asia/Shanghai"  HOME="/data"
