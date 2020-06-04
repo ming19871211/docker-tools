@@ -15,7 +15,7 @@ function exec::all_yapi_import(){
     elif [ "$element" == "yapi-import.json" ]; then
       isYapiImport='true'
       echo "在$1目录执行数据导入"
-      exec "cd $1 && $exec_cmd"
+      cd $1 && $exec_cmd
     fi  
   done
   if [[ "$count" == 0 ]]; then
