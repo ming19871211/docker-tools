@@ -5,7 +5,7 @@ ENV TZ="Asia/Shanghai"  HOME="/data"
 
 COPY docker-entrypoint.sh /
 
-RUN mkdir -p /data; && chmod 777 /docker-entrypoint.sh; \
+RUN mkdir -p /data && chmod 777 /docker-entrypoint.sh \
     && npm config set registry https://registry.npm.taobao.org \
     && npm install -g yapi-cli 
 
