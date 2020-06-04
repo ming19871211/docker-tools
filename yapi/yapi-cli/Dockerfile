@@ -3,10 +3,13 @@ MAINTAINER Meiqiming  <ming19871211@163.com>
 
 ENV TZ="Asia/Shanghai"  HOME="/data"
 
-RUN mkdir -p /data \
+COPY docker-entrypoint.sh /
+
+RUN mkdir -p /data; && chmod 777 /docker-entrypoint.sh; \
     && npm config set registry https://registry.npm.taobao.org \
-    && npm install -g yapi-cli
+    && npm install -g yapi-cli 
 
 WORKDIR ${HOME}
 
-CMD ["yapi" "import"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["yapi","import"]
