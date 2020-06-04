@@ -21,7 +21,7 @@ function exec::all_yapi_import(){
   if [[ "$count" == 0 ]]; then
     echo "$1目录为空目录，不能执行导入操作哦。"
   elif [[ "$isYapiImport" == "false" ]]; then
-    echo "$1目录包括没有yapi-import.json文件，不能执行导入操作哦。"
+    echo "$1目录没有yapi-import.json文件，不能执行导入操作哦。"
   fi;
 }
 # 执行/data目录下数据导入
