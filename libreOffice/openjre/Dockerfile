@@ -32,7 +32,7 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
 && fc-cache -fv \
 && rm -rf /var/lib/apt/lists/* 
 # 安装LibreOffice包含字体
-&& wget https://download.documentfoundation.org/libreoffice/stable/${VERSION}/deb/x86_64/LibreOffice_${VERSION}_Linux_x86-64_deb.tar.gz \
+RUN wget https://download.documentfoundation.org/libreoffice/stable/${VERSION}/deb/x86_64/LibreOffice_${VERSION}_Linux_x86-64_deb.tar.gz \
 && wget https://download.documentfoundation.org/libreoffice/stable/${VERSION}/deb/x86_64/LibreOffice_${VERSION}_Linux_x86-64_deb_langpack_zh-CN.tar.gz \
 && mkdir LibreOffice \
 && tar -zxvf LibreOffice_${VERSION}_Linux_x86-64_deb.tar.gz -C LibreOffice \
