@@ -1,4 +1,4 @@
-FROM openjdk:8-jre
+FROM openjdk:8-jdk
 MAINTAINER QiMing Mei <meiqiming@talkweb.com.cn>
 LABEL role='libreoffice' version='1.0.0' tags='libreoffice' description='libfreoffice conversion with jre8 support'
 ENV TIMEZONE="Asia/Shanghai" VERSION=7.1.8
