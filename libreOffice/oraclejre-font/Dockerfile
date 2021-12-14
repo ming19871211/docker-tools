@@ -10,7 +10,7 @@ RUN mv /usr/local/jre1.8* /usr/local/jre1.8 \
 && cp /etc/apt/sources.list /etc/apt/sources.list.bak \
 && sed -e 's/deb.debian.org/mirrors.aliyun.com/g' -i  /etc/apt/sources.list \
 && apt-get update \
-&& apt-get -y install fontconfig wget libxinerama1 libdbus-1-3 libglib2.0-0 libcairo2 libcups2 libsm6 libx11-xcb1 \
+&& apt-get -y install fontconfig wget procps libxinerama1 libdbus-1-3 libglib2.0-0 libcairo2 libcups2 libsm6 libx11-xcb1 \
 && fc-cache -fv && rm -rf /var/lib/apt/lists/* 
 # 安装LibreOffice
 RUN wget https://download.documentfoundation.org/libreoffice/stable/${VERSION}/deb/x86_64/LibreOffice_${VERSION}_Linux_x86-64_deb.tar.gz \

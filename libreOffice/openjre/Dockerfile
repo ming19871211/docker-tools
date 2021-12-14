@@ -24,11 +24,14 @@ LABEL role='libreoffice' version='1.0.0' tags='libreoffice' description='libfreo
 ENV TIMEZONE="Asia/Shanghai" VERSION=7.1.8
 # 复制下载
 COPY --from=build han /usr/share/fonts/han
-# 安装
+# 安装依赖
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
 && sed -e 's/deb.debian.org/mirrors.aliyun.com/g' -i  /etc/apt/sources.list \
 && apt-get update \
-&& apt-get -y install libxinerama1 libdbus-1-3 libglib2.0-0 libcairo2 libcups2 libsm6 libx11-xcb1 \
+&& apt-get -y install procps libxinerama1 libdbus-1-3 libglib2.0-0 libcairo2 libcups2 libsm6 libx11-xcb1 \
+&& fc-cache -fv \
+&& rm -rf /var/lib/apt/lists/* 
+# 安装LibreOffice包含字体
 && wget https://download.documentfoundation.org/libreoffice/stable/${VERSION}/deb/x86_64/LibreOffice_${VERSION}_Linux_x86-64_deb.tar.gz \
 && wget https://download.documentfoundation.org/libreoffice/stable/${VERSION}/deb/x86_64/LibreOffice_${VERSION}_Linux_x86-64_deb_langpack_zh-CN.tar.gz \
 && mkdir LibreOffice \
@@ -37,6 +40,6 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
 && dpkg -i LibreOffice/LibreOffice_${VERSION}.*_Linux_x86-64_deb/DEBS/*.deb \
 && dpkg -i LibreOffice/LibreOffice_${VERSION}.*_Linux_x86-64_deb_langpack_zh-CN/DEBS/*.deb \
 && ln -s /opt/libreoffice7.1 /usr/lib/libreoffice \
+&& mkdir /usr/lib64 && ln -s /opt/libreoffice7.1 /usr/lib64/libreoffice \
 && ln -s /opt/libreoffice7.1/program/soffice /usr/local/bin/libreoffice \
-&& fc-cache -fv \
-&& rm -rf /var/lib/apt/lists/* && rm -rf LibreOffice*
+&& rm -rf LibreOffice*
